@@ -5,6 +5,9 @@ using UnityEngine.Tilemaps;
 
 public class MapGeneration : MonoBehaviour
 {
+    private static MapGeneration mapSingleton;
+    public static MapGeneration MapSingleton { get { return mapSingleton; } }
+
     public float gridWidth;
     public int desiredSpaces;
     public Grid grid;
@@ -24,9 +27,17 @@ public class MapGeneration : MonoBehaviour
 
     public int spawnY;
 
+    void Awake()
+    {
+        if (mapSingleton != null && mapSingleton != this) Destroy(gameObject);
+        else mapSingleton = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        var camWidth = Camera.main.ScreenToWorldPoint(new Vector2(0,0));
+        gridWidth = Mathf.Abs(camWidth.x * 2);
         
         float width =  gridWidth / (float)desiredSpaces;
         grid.cellSize = new Vector3(width,width,0);
@@ -34,7 +45,7 @@ public class MapGeneration : MonoBehaviour
         Generate(0, 30);
         //Mathf.PerlinNoise(1, 1);
 
-        spawnInterval = grid.cellSize.y * spawnY / mapSpeed;
+        CalculateMapMovement();
 
         //test = (int)spawnInterval - ((int)grid.cellSize.y * 30);
     }
@@ -42,6 +53,8 @@ public class MapGeneration : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        CalculateMapMovement();
+
         grid.transform.position -= new Vector3(0, mapSpeed, 0);
 
         test++;
@@ -55,6 +68,11 @@ public class MapGeneration : MonoBehaviour
 
             Despawn(lastY - spawnY * 4);
         }
+    }
+
+    void CalculateMapMovement()
+    {
+        spawnInterval = grid.cellSize.y * spawnY / mapSpeed;
     }
 
     void Generate(int startingY, int rows)

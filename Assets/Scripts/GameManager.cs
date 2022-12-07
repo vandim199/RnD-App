@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadLevel(string levelName)
     {
+        SetGameSpeed(1);
         SceneManager.LoadScene(levelName);
     }
 
