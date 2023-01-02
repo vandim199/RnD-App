@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fc21139b594d5847ae3066c7ae1458d, type: 3}
+  m_Name: Tiles Indexes
+  m_EditorClassIdentifier: 
+  spritemap:
+  - {fileID: 11400000, guid: fc822aa13cba6394ebb48dca7b6e08a1, type: 2}
+  - {fileID: 11400000, guid: fc822aa13cba6394ebb48dca7b6e08a1, type: 2}
+  - {fileID: 11400000, guid: a1eeb7186315e4c449103b7e81df5530, type: 2}
+  - {fileID: 0}
