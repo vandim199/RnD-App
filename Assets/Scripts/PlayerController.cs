@@ -21,6 +21,9 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         lineRend = GetComponent<LineRenderer>();
+
+        float size = MapGeneration.MapSingleton.gridWidth;
+        transform.localScale = MapGeneration.MapSingleton.grid.cellSize;
     }
 
     // Update is called once per frame
@@ -33,6 +36,8 @@ public class PlayerController : MonoBehaviour
 
         if(Input.GetMouseButton(0) && grounded)
         {
+            lineRend.enabled = true;
+
             Vector2 dragEndPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
             Vector2 velocity = (dragStartPos - dragEndPos) * jumpForce;
 
@@ -54,8 +59,9 @@ public class PlayerController : MonoBehaviour
             Vector2 velocity = (dragStartPos - dragEndPos) * jumpForce;
 
             rb.velocity = velocity;
-            lineRend.SetPositions(new Vector3[0]);
         }
+
+        if(!Input.GetMouseButton(0)) lineRend.enabled = false;
 
         /*if (Input.GetMouseButtonDown(0))
         {
@@ -76,11 +82,13 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        grounded = RayTest(-Vector2.up);
+        grounded = RayTest(-Vector2.up, transform.position) || 
+            RayTest(-Vector2.up, transform.position + new Vector3(0.5f, 0, 0)) || 
+            RayTest(-Vector2.up, transform.position - new Vector3(0.5f, 0, 0));
 
         //if (grounded) transform.rotation = Quaternion.identity;
 
-        if (RayTest(Vector2.right) && facingRight)
+        /*if (RayTest(Vector2.right) && facingRight)
         {
             Flip();
             //transform.rotation = Quaternion.identity;
@@ -89,17 +97,17 @@ public class PlayerController : MonoBehaviour
         {
             Flip();
             //transform.rotation = Quaternion.identity;
-        }
+        }*/
     }
 
-    private bool RayTest(Vector2 direction)
+    private bool RayTest(Vector2 direction, Vector3 startPos)
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, raycastLength, layerIgnore);
+        RaycastHit2D hit = Physics2D.Raycast(startPos, direction, raycastLength, layerIgnore);
 
         if (hit.collider != null)
         {
-            Debug.DrawRay(transform.position, direction * raycastLength);
-            float distance = Vector2.Distance(transform.position, hit.point);
+            Debug.DrawRay(startPos, direction * raycastLength);
+            float distance = Vector2.Distance(startPos, hit.point);
 
             if (distance <= raycastLength)
             {

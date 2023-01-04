@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Tiles Indexes
   m_EditorClassIdentifier: 
   spritemap:
-  - {fileID: 11400000, guid: fc822aa13cba6394ebb48dca7b6e08a1, type: 2}
-  - {fileID: 11400000, guid: fc822aa13cba6394ebb48dca7b6e08a1, type: 2}
-  - {fileID: 11400000, guid: a1eeb7186315e4c449103b7e81df5530, type: 2}
+  - {fileID: 11400000, guid: dda0bceac0544cb49831bcfc0ad8717f, type: 2}
+  - {fileID: 11400000, guid: dda0bceac0544cb49831bcfc0ad8717f, type: 2}
+  - {fileID: 11400000, guid: 6c48a6981f63e964f983174bef8ef5c0, type: 2}
   - {fileID: 0}
