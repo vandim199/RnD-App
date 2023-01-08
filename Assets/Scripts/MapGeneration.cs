@@ -31,26 +31,15 @@ public class MapGeneration : MonoBehaviour
 
     public int spawnY;
 
-    public List<TileInfo> tileInfos;
+    public GameObject coinPrefab;
 
-    private Dictionary<TileBase, TileInfo> tilemapInfo;
 
-    private string lastPreset;
+    private TextAsset lastPreset;
 
     void Awake()
     {
         if (mapSingleton != null && mapSingleton != this) Destroy(gameObject);
         else mapSingleton = this;
-
-        tilemapInfo = new Dictionary<TileBase, TileInfo>();
-
-        foreach (var tileInfo in tileInfos)
-        {
-            foreach (var tile in tileInfo.spritemap)
-            {
-                tilemapInfo.Add(tile, tileInfo);
-            }
-        }
 
     }
 
@@ -62,7 +51,9 @@ public class MapGeneration : MonoBehaviour
         float width =  gridWidth / (float)desiredSpaces;
         grid.cellSize = new Vector3(width,width,0);
 
-        Generate(0, 10, "Start");
+        coinPrefab.transform.localScale = new Vector3(width, width, 1);
+
+        Generate(0, 10, presetPaths.startPreset);
         Generate(10, 10, presetPaths.options[UnityEngine.Random.Range(0, presetPaths.options.Count)]);
         Generate(20, 10, presetPaths.options[UnityEngine.Random.Range(0, presetPaths.options.Count)]);
 
@@ -78,12 +69,11 @@ public class MapGeneration : MonoBehaviour
 
     void FixedUpdate()
     {
-        CalculateMapMovement();
-
-        //grid.transform.position -= new Vector3(0, mapSpeed, 0);
+        //CalculateMapMovement();
 
         counter++;
 
+        GameManager.GameManagerSingleton.AddScore(1);
 
         if(counter >= spawnInterval)
         {
@@ -100,14 +90,16 @@ public class MapGeneration : MonoBehaviour
         spawnInterval = grid.cellSize.y * spawnY / mapSpeed;
     }
 
-    void Generate(int startingY, int rows, string chosenPreset)
+    void Generate(int startingY, int rows, TextAsset chosenPreset)
     {
         int border = desiredSpaces / 2;
 
-        var text = File.ReadLines(Application.streamingAssetsPath + "/Maps/" + chosenPreset +".tmx").Where(a => a.Contains(",")).ToArray();
+        string[] text;
+
+        text = chosenPreset.text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+        text = text.Where(a => a.Contains(",")).ToArray();
 
 
-        
         for (int y = 0 + startingY; y < rows + startingY; y++)
         {
             var line = text[text.Length - (y - startingY) - 1];
@@ -126,10 +118,18 @@ public class MapGeneration : MonoBehaviour
                 }
 
                 
-                float perlin = Mathf.PerlinNoise((float)(x + desiredSpaces / 2) * noiseScale, (float)y * noiseScale);
+                //float perlin = Mathf.PerlinNoise((float)(x + desiredSpaces / 2) * noiseScale, (float)y * noiseScale);
 
                 //map.SetTile(new Vector3Int(x, y, 0), perlin > 0.3f ? tile1 : tile2);
                 map.SetTile(new Vector3Int(x, y, 0), tileInfo.spritemap[int.Parse(lineArr[x+border-1])]);
+
+                if(int.Parse(lineArr[x + border - 1]) == 1)
+                {
+                    if (UnityEngine.Random.Range(0, 10) == 1)
+                    {
+                        Instantiate(coinPrefab, map.GetCellCenterWorld(new Vector3Int(x, y, 0)), Quaternion.identity);
+                    }
+                }
                 
             }
         }
@@ -146,19 +146,6 @@ public class MapGeneration : MonoBehaviour
             {
                 map.SetTile(new Vector3Int(x, y, 0), null);
             }
-        }
-    }
-
-    public void SwapState(Vector3Int tilePos)
-    {
-        var tile = map.GetTile(tilePos);
-        TileInfo info;
-        tilemapInfo.TryGetValue(tile, out info);
-
-        for (int i = 0; i < info.spritemap.Length - 1; i++)
-        {
-            if (info.spritemap[i] == tile) map.SetTile(tilePos, info.spritemap[i + 1]);
-            if (i == info.spritemap.Length - 1) Debug.Log("a");
         }
     }
 }

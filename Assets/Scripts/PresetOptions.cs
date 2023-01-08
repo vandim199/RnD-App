@@ -5,5 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Preset Option")]
 public class PresetOptions : ScriptableObject
 {
-    public List<string> options;
+    public TextAsset startPreset;
+    public List<TextAsset> options;
 }

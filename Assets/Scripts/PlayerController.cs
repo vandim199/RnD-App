@@ -63,21 +63,42 @@ public class PlayerController : MonoBehaviour
 
         if(!Input.GetMouseButton(0)) lineRend.enabled = false;
 
-        /*if (Input.GetMouseButtonDown(0))
+        if(Input.touchCount > 0)
         {
-            if (grounded)
+            Touch touch = Input.GetTouch(0);
+
+            if(touch.phase == TouchPhase.Began && grounded)
             {
-                rb.AddForce((Vector2.up + (Vector2.right * (facingRight ? 1 : -1))) * jumpForce, ForceMode2D.Impulse);
-            }
-            else
-            {
-                rb.AddForce((Vector2.up * 1.2f + new Vector2(0, Vector2.Dot(transform.right * (facingRight ? 1 : -1), Vector2.up)) +
-                    (Vector2.right * (facingRight ? 1 : -1))) * jumpForce, ForceMode2D.Impulse);
+                dragStartPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
             }
 
-            rb.angularVelocity = 0;
-            rb.AddTorque(rotForce * (facingRight ? -1 : 1), ForceMode2D.Force);
-        }*/
+            if(touch.phase == TouchPhase.Moved && grounded)
+            {
+                lineRend.enabled = true;
+
+                Vector2 dragEndPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+                Vector2 velocity = (dragStartPos - dragEndPos) * jumpForce;
+
+                Vector2[] trajectory = AimLine(rb, gameObject.transform.position, velocity, 500);
+                lineRend.positionCount = trajectory.Length;
+
+                Vector3[] positions = new Vector3[trajectory.Length];
+                for (int i = 0; i < trajectory.Length; i++)
+                {
+                    positions[i] = trajectory[i];
+                }
+
+                lineRend.SetPositions(positions);
+            }
+
+            if(touch.phase == TouchPhase.Ended && grounded)
+            {
+                Vector2 dragEndPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+                Vector2 velocity = (dragStartPos - dragEndPos) * jumpForce;
+
+                rb.velocity = velocity;
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -87,17 +108,6 @@ public class PlayerController : MonoBehaviour
             RayTest(-Vector2.up, transform.position - new Vector3(0.5f, 0, 0));
 
         //if (grounded) transform.rotation = Quaternion.identity;
-
-        /*if (RayTest(Vector2.right) && facingRight)
-        {
-            Flip();
-            //transform.rotation = Quaternion.identity;
-        }
-        if (RayTest(-Vector2.right) && !facingRight)
-        {
-            Flip();
-            //transform.rotation = Quaternion.identity;
-        }*/
     }
 
     private bool RayTest(Vector2 direction, Vector3 startPos)
@@ -147,5 +157,23 @@ public class PlayerController : MonoBehaviour
         }
 
         return result;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Collectable")
+        {
+            GameManager.GameManagerSingleton.AddScore(500);
+            Destroy(collision.gameObject);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Hazard")
+        {
+            Destroy(gameObject);
+            GameManager.GameManagerSingleton.EndGame();
+        }
     }
 }

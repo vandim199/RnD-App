@@ -37,7 +37,7 @@ public class PlayerTouchController : MonoBehaviour
             var tilePos = GetTile(Input.mousePosition);
             if (Time.time >= touchStart + holdInterval)
             {
-                MapGeneration.MapSingleton.SwapState(tilePos);
+                //MapGeneration.MapSingleton.SwapState(tilePos);
                 touchStart = Time.time;
             }
         }

@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d12e80fa7ba879498e3da8be7cedce4, type: 3}
   m_Name: Preset Option
   m_EditorClassIdentifier: 
+  startPreset: {fileID: 2811297602134710623, guid: 4d0f8c696e61b5a45b82d925207c77b5, type: 3}
   options:
-  - 1
-  - 2
+  - {fileID: 2811297602134710623, guid: 42fcda658eaf1694eae1b153f876252c, type: 3}
+  - {fileID: 2811297602134710623, guid: 384069a6df1a77f4a9882c8a7087cee3, type: 3}
+  - {fileID: 2811297602134710623, guid: 946c3c1d9ae814745bc54a92ae914c76, type: 3}
+  - {fileID: 2811297602134710623, guid: 2caab8a5c9ed7b04d813a9927f0facbb, type: 3}

@@ -5,16 +5,24 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    private static GameManager gameManager;
+    public static GameManager GameManagerSingleton { get { return gameManager; } }
+
+    public int score;
+    public TMPro.TMP_Text text;
+
+    public UnityEngine.Events.UnityEvent GameEnd;
+
     // Start is called before the first frame update
     void Start()
     {
-        
-    }
+        if (gameManager != null && gameManager != this) Destroy(gameObject);
+        else gameManager = this;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        text.text = "Score: 0";
+        score = 0;
+
+        SetGameSpeed(1);
     }
 
     public void LoadLevel(string levelName)
@@ -23,8 +31,20 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(levelName);
     }
 
-    public void SetGameSpeed(int speed)
+    public void SetGameSpeed(float speed)
     {
         Time.timeScale = speed;
+    }
+
+    public void AddScore(int points)
+    {
+        score += points;
+        text.text = "Score: " + score;
+    }
+
+    public void EndGame()
+    {
+        GameEnd.Invoke();
+        SetGameSpeed(0);
     }
 }
