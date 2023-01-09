@@ -576,7 +576,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 528664890}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -974,8 +974,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 469317267}
   - {fileID: 1520652308}
+  - {fileID: 469317267}
   - {fileID: 1027172478}
   - {fileID: 1893329728}
   m_Father: {fileID: 0}
@@ -1150,8 +1150,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44062b10b08e6e8499171a506c3c8c8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  score: 0
   text: {fileID: 469317268}
+  score: 0
   GameEnd:
     m_PersistentCalls:
       m_Calls:
@@ -1205,9 +1205,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 371c9ed26b060344e86d7ba9f2d0328c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grid: {fileID: 513745132}
   mapSpeed: 0.013
   presetHeight: 10
-  grid: {fileID: 513745132}
   gridWidth: 12.1
   desiredSpaces: 8
   map: {fileID: 489003505}
@@ -1776,17 +1776,29 @@ MonoBehaviour:
           m_StringArgument: MainMenu
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 725985628}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: SetGameSpeed
-        m_Mode: 3
+      - m_Target: {fileID: 1520652307}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 725985628}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: SetGameSpeed
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 1
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &1508688437
 MonoBehaviour:
@@ -2103,7 +2115,7 @@ RectTransform:
   m_Children:
   - {fileID: 1118367359}
   m_Father: {fileID: 528664890}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -2169,7 +2181,7 @@ MonoBehaviour:
       - m_Target: {fileID: 725985628}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
         m_MethodName: SetGameSpeed
-        m_Mode: 3
+        m_Mode: 4
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2177,6 +2189,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1520652307}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1520652310
 MonoBehaviour:
@@ -2789,7 +2813,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06a44f1f5393558499fe95a86c102aa3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  touchStart: 0
-  holdInterval: 0.3
-  lastPos: {x: 0, y: 0, z: 0}
-  sandTile: {fileID: 0}
