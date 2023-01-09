@@ -8,9 +8,10 @@ public class GameManager : MonoBehaviour
     private static GameManager gameManager;
     public static GameManager GameManagerSingleton { get { return gameManager; } }
 
-    public int score;
-    public TMPro.TMP_Text text;
+    [SerializeField]
+    private TMPro.TMP_Text text;
 
+    public int score;
     public UnityEngine.Events.UnityEvent GameEnd;
 
     // Start is called before the first frame update

@@ -4,31 +4,29 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float jumpForce;
-    public float rotForce;
-
-    public float raycastLength;
-    public LayerMask layerIgnore;
-
+    [SerializeField]
+    private float jumpForce;
+    [SerializeField]
+    private float raycastLength;
+    [SerializeField]
+    private LayerMask layerIgnore;
     private bool facingRight = true;
     private bool grounded;
     private Rigidbody2D rb;
-    private Vector2 dragStartPos;
     private LineRenderer lineRend;
+    private Vector2 dragStartPos;
 
-    // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         lineRend = GetComponent<LineRenderer>();
 
-        float size = MapGeneration.MapSingleton.gridWidth;
         transform.localScale = MapGeneration.MapSingleton.grid.cellSize;
     }
 
-    // Update is called once per frame
     void Update()
     {
+        //PC Controls
         if(Input.GetMouseButtonDown(0) && grounded)
         {
             dragStartPos = Camera.main.ScreenToViewportPoint(Input.mousePosition);
@@ -59,10 +57,11 @@ public class PlayerController : MonoBehaviour
             Vector2 velocity = (dragStartPos - dragEndPos) * jumpForce;
 
             rb.velocity = velocity;
+            lineRend.enabled = false;
         }
 
-        if(!Input.GetMouseButton(0)) lineRend.enabled = false;
 
+        //Mobile Controls
         if(Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -97,6 +96,7 @@ public class PlayerController : MonoBehaviour
                 Vector2 velocity = (dragStartPos - dragEndPos) * jumpForce;
 
                 rb.velocity = velocity;
+                lineRend.enabled = false;
             }
         }
     }
@@ -107,7 +107,6 @@ public class PlayerController : MonoBehaviour
             RayTest(-Vector2.up, transform.position + new Vector3(0.5f, 0, 0)) || 
             RayTest(-Vector2.up, transform.position - new Vector3(0.5f, 0, 0));
 
-        //if (grounded) transform.rotation = Quaternion.identity;
     }
 
     private bool RayTest(Vector2 direction, Vector3 startPos)

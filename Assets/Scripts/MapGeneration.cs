@@ -11,29 +11,28 @@ public class MapGeneration : MonoBehaviour
     private static MapGeneration mapSingleton;
     public static MapGeneration MapSingleton { get { return mapSingleton; } }
 
-    public float gridWidth;
-    public int desiredSpaces;
     public Grid grid;
-    public Tilemap map;
 
-    public TileInfo tileInfo;
-    public PresetOptions presetPaths;
-    //public string[] presetPaths;
-
-    public float noiseScale;
-    public float noiseTolerance;
-
-    private int counter = 0;
-    private int lastY = 0;
-
-    public float mapSpeed;
-    public float spawnInterval;
-
-    public int spawnY;
-
+    [SerializeField]
+    private float mapSpeed;
+    [SerializeField]
+    private int presetHeight;
+    [SerializeField]
+    private float gridWidth;
+    [SerializeField]
+    private int desiredSpaces;
+    [SerializeField]
+    private Tilemap map;
+    [SerializeField]
+    private TileInfo tileInfo;
+    [SerializeField]
+    private PresetOptions levelPresets;
+    [SerializeField]
     public GameObject coinPrefab;
 
-
+    private float spawnInterval;
+    private int counter = 0;
+    private int lastY = 0;
     private TextAsset lastPreset;
 
     void Awake()
@@ -53,9 +52,9 @@ public class MapGeneration : MonoBehaviour
 
         coinPrefab.transform.localScale = new Vector3(width, width, 1);
 
-        Generate(0, 10, presetPaths.startPreset);
-        Generate(10, 10, presetPaths.options[UnityEngine.Random.Range(0, presetPaths.options.Count)]);
-        Generate(20, 10, presetPaths.options[UnityEngine.Random.Range(0, presetPaths.options.Count)]);
+        Generate(0, 10, levelPresets.startPreset);
+        Generate(10, 10, levelPresets.options[1]);
+        Generate(20, 10, levelPresets.options[UnityEngine.Random.Range(0, levelPresets.options.Count)]);
 
         CalculateMapMovement();
 
@@ -63,14 +62,10 @@ public class MapGeneration : MonoBehaviour
                                               new Vector4(0,width,0,0),
                                               new Vector4(0,0,1,0),
                                               new Vector4(0,0,0,1));
-
-        //counter = (int)spawnInterval - ((int)grid.cellSize.y * 30);
     }
 
     void FixedUpdate()
     {
-        //CalculateMapMovement();
-
         counter++;
 
         GameManager.GameManagerSingleton.AddScore(1);
@@ -79,15 +74,15 @@ public class MapGeneration : MonoBehaviour
         {
             counter = 0;
 
-            Generate(lastY, spawnY, presetPaths.options[UnityEngine.Random.Range(0, presetPaths.options.Count)]);
+            Generate(lastY, presetHeight, levelPresets.options[UnityEngine.Random.Range(0, levelPresets.options.Count)]);
 
-            Despawn(lastY - spawnY * 4);
+            Despawn(lastY - presetHeight * 4);
         }
     }
 
     void CalculateMapMovement()
     {
-        spawnInterval = grid.cellSize.y * spawnY / mapSpeed;
+        spawnInterval = grid.cellSize.y * presetHeight / mapSpeed;
     }
 
     void Generate(int startingY, int rows, TextAsset chosenPreset)
@@ -104,7 +99,6 @@ public class MapGeneration : MonoBehaviour
         {
             var line = text[text.Length - (y - startingY) - 1];
 
-            //int[] lineArr = Array.ConvertAll(line.Split(','), s=> int.Parse(s));
             var lineArr = line.Split(',');
 
             lineArr = lineArr.Where(x => !string.IsNullOrEmpty(x)).ToArray();
@@ -117,10 +111,6 @@ public class MapGeneration : MonoBehaviour
                     continue;
                 }
 
-                
-                //float perlin = Mathf.PerlinNoise((float)(x + desiredSpaces / 2) * noiseScale, (float)y * noiseScale);
-
-                //map.SetTile(new Vector3Int(x, y, 0), perlin > 0.3f ? tile1 : tile2);
                 map.SetTile(new Vector3Int(x, y, 0), tileInfo.spritemap[int.Parse(lineArr[x+border-1])]);
 
                 if(int.Parse(lineArr[x + border - 1]) == 1)
@@ -140,7 +130,7 @@ public class MapGeneration : MonoBehaviour
 
     void Despawn(int row)
     {
-        for (int y = row; y > row - spawnY; y--)
+        for (int y = row; y > row - presetHeight; y--)
         {
             for (int x = -desiredSpaces/2; x < desiredSpaces/2; x++)
             {
